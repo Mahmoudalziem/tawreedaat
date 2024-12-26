@@ -36,7 +36,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 
 # Change current user to www
-USER www-data
+# USER www-data
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
