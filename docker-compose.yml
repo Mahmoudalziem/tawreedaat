@@ -1,0 +1,66 @@
+version: '3.8'
+services:
+  app:
+    image: php:7.3-fpm-alpine # Use the latest stable PHP version
+    container_name: tawreedaat
+    working_dir: /var/www/html
+    volumes:
+      - ./application:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini # Custom PHP configuration
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=live
+      - DB_USERNAME=live
+      - DB_PASSWORD=Engineer@01258
+    depends_on:
+      - db
+    command: >
+      sh -c "php artisan config:cache &&
+             php artisan route:cache &&
+             php artisan view:cache &&
+             php-fpm"
+
+  # web:
+  #   image: nginx:alpine
+  #   container_name: laravel_web
+  #   working_dir: /var/www/html
+  #   volumes:
+  #     - .:/var/www/html
+  #     - ./nginx.conf:/etc/nginx/nginx.conf # Custom Nginx configuration
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - app
+
+  web:
+    image: caddy:latest
+    container_name: _caddy
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+
+
+  db:
+    image: mysql:8.0
+    container_name: tawreedaat_db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: live
+      MYSQL_USER: live
+      MYSQL_PASSWORD: Engineer@01258
+    volumes:
+      - db_data:/var/lib/mysql
+volumes:
+  db_data:
