@@ -35,7 +35,7 @@ services:
     container_name: tawreedaat_caddy
     working_dir: /var/www/html
     volumes:
-      - .:/var/www/html
+      - ./application:/var/www/html
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
     ports:
       - "80:80"
