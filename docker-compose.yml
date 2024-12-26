@@ -18,6 +18,8 @@ services:
       - ./php/php.ini:/usr/local/etc/php/php.ini # Custom PHP configuration
     depends_on:
       - db
+    networks:
+      - backend
   # web:
   #   image: nginx:alpine
   #   container_name: laravel_web
@@ -42,8 +44,8 @@ services:
       - "443:443"
     depends_on:
       - app
-
-
+    networks:
+      - backend
   db:
     image: mysql:8.0
     container_name: tawreedaat_db
@@ -57,5 +59,10 @@ services:
       MYSQL_PASSWORD: Engineer@01258
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - backend
 volumes:
   db_data:
+networks:
+  backend:
+    driver: bridge
