@@ -37,7 +37,7 @@ services:
 
   web:
     image: caddy:latest
-    container_name: _caddy
+    container_name: tawreedaat_caddy
     working_dir: /var/www/html
     volumes:
       - .:/var/www/html

@@ -1,5 +1,5 @@
 {
-    auto_https on
+
     log {
         output stdout
         format console
