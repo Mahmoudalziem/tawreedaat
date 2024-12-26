@@ -1,12 +1,10 @@
 version: '3.8'
 services:
   app:
-    image: php:7.3-fpm-alpine # Use the latest stable PHP version
+    build:
+      context: php
+      dockerfile: Dockerfile
     container_name: tawreedaat
-    working_dir: /var/www/html
-    volumes:
-      - ./application:/var/www/html
-      - ./php/php.ini:/usr/local/etc/php/php.ini # Custom PHP configuration
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
@@ -14,12 +12,12 @@ services:
       - DB_PORT=3306
       - DB_DATABASE=live
       - DB_USERNAME=live
-      - DB_PASSWORD=Engineer@01258
+      - DB_PASSWORD=Engineer@01258ction
+    volumes:
+      - ./application:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini # Custom PHP configuration
     depends_on:
       - db
-    command: >
-      sh -c "php-fpm"
-
   # web:
   #   image: nginx:alpine
   #   container_name: laravel_web
