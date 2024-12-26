@@ -1,27 +1,40 @@
 FROM php:7.3-fpm
 
-RUN apt-get update && apt-get install -y \
-    curl gnupg apt-transport-https && \
-    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-    apt-get update && ACCEPT_EULA=Y apt-get install -y \
-    msodbcsql18 mssql-tools && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-RUN docker-php-ext-install pdo pdo_mysql
-
-
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy existing application code
-COPY . .
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    locales \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    curl \
+    libzip-dev \
+    libpq-dev \
+    libonig-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring zip exif pcntl
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install application dependencies
-# RUN composer install --no-dev --optimize-autoloader
 
-# Expose port
+# Change current user to www
+USER www-data
+
+# Expose port 9000 and start php-fpm server
 EXPOSE 9000
+CMD ["php-fpm"]
