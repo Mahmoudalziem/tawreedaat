@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -y \
     msodbcsql18 mssql-tools && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN docker-php-ext-install pdo pdo_mysql
+
+
 # Set working directory
 WORKDIR /var/www/html
 
