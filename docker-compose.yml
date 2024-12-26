@@ -12,7 +12,7 @@ services:
       - DB_PORT=3306
       - DB_DATABASE=live
       - DB_USERNAME=live
-      - DB_PASSWORD=Engineer@01258ction
+      - DB_PASSWORD=Engineer@01258
     volumes:
       - ./application:/var/www/html
       - ./php/php.ini:/usr/local/etc/php/php.ini # Custom PHP configuration
